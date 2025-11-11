@@ -8,6 +8,8 @@ Giới thiệu
 
 Quản lý task: tạo, sửa, xóa, gắn deadline và trạng thái.
 
+Quản lý thành viên: mời, uỷ quyền, xem thông tin và xoá thành viên.
+
 Chat nội bộ: ghi chú, bình luận và trao đổi giữa các thành viên.
 
 Calendar: xem lịch học và deadline task.
@@ -18,7 +20,9 @@ Progress: theo dõi tiến độ task và tổng quan nhóm.
 
 2. Nhóm dự án
 
-Quản lý task: milestone, task, deadline, phân công công việc.
+Quản lý task: milestone, task, deadline, phân công công việc, cập nhật trạng thái
+
+Quản lý thành viên: mời, uỷ quyền, xem thông tin và xoá thành viên.
 
 Chat nội bộ: ghi chú, bình luận và trao đổi giữa các thành viên.
 
@@ -28,11 +32,17 @@ File: chia sẻ tài liệu, file liên quan dự án.
 
 Progress: thống kê tiến độ dự án, báo cáo kết quả.
 
+3. Hệ thống tìm kiếm các loại như group, task, file, people.
+
+4. Quản lí tài khoản, hiển thị thông tin về người dùng.
+
+5. Cập nhật giao diện hệ thống như về font, mode, ngôn ngữ
+
 🛠️ Công nghệ nổi bật
 
 Kotlin + XML (Android)
 
-MVVM + StateFlow + Coroutines
+MVVM + StateFlow + Coroutine
 
 Retrofit (API)
 
