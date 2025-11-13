@@ -15,6 +15,7 @@ import com.xmobile.project1groupstudyappnew.utils.CacheManager
 import com.xmobile.project1groupstudyappnew.view.adapter.Viewpager2Adapter
 import com.xmobile.project1groupstudyappnew.viewmodel.HomeViewModel
 import com.xmobile.project1groupstudyappnew.viewmodel.NotificationViewModel
+import com.xmobile.project1groupstudyappnew.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +23,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val homeViewModel: HomeViewModel by viewModels()
+    private val taskViewModel: TaskViewModel by viewModels()
     private val notificationViewModel: NotificationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,13 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initControl() {
+        val userId = getSharedPreferences("user", MODE_PRIVATE).getString("userId", null)
+
+        //dọn file trong cache
         CacheManager.clearOldCache(this)
+
+        //kiểm tra task quá hạn
+        taskViewModel.updateTaskOverdue(userId ?: "")
 
         setUpViewPager()
         setUpBottomNavigation()

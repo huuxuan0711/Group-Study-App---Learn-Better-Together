@@ -1,5 +1,6 @@
 package com.xmobile.project1groupstudyappnew.repository
 
+import android.util.Log
 import com.google.firebase.database.FirebaseDatabase
 import com.xmobile.project1groupstudyappnew.model.obj.file.File
 import com.xmobile.project1groupstudyappnew.model.obj.group.Group
@@ -13,6 +14,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(
@@ -458,6 +461,47 @@ class TaskRepositoryImpl @Inject constructor(
             Result.success(status)
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    override suspend fun updateTaskOverdue(userId: String) {
+        try {
+            val tasksRef = firebaseDatabase.getReference("Tasks")
+            val snapshot = tasksRef.get().await()
+            val currentDate = LocalDate.now()
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+            for (child in snapshot.children) {
+                val task = child.getValue(Task::class.java) ?: continue
+
+                // Bỏ qua nếu dateOnly null, rỗng hoặc không chứa userId
+                if (task.dateOnly.isEmpty() || !task.dateOnly.containsKey(userId)) continue
+
+                val userDateStr = task.dateOnly[userId] ?: continue
+                if (userDateStr.isBlank()) continue
+
+                val currentStatus = task.status[userId] ?: continue
+
+                // Bỏ qua nếu status là 2 (review) hoặc 3 (done)
+                if (currentStatus == 2 || currentStatus == 3) continue
+
+                val taskDate = try {
+                    LocalDate.parse(userDateStr, formatter)
+                } catch (e: Exception) {
+                    Log.d("updateTaskOverdue", "Lỗi parse date ở task ${task.id}: ${e.message}")
+                    continue
+                }
+
+                // Nếu ngày hiện tại > ngày deadline → quá hạn
+                if (currentDate.isAfter(taskDate)) {
+                    val statusRef = child.ref.child("status/$userId")
+                    statusRef.setValue(4).await()
+                    Log.d("updateTaskOverdue", "Task ${task.id} quá hạn → cập nhật status=4 cho $userId")
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.d("updateTaskOverdue", "updateTaskOverdue lỗi: $e")
         }
     }
 

@@ -23,4 +23,6 @@ interface TaskRepository {
     suspend fun deleteTask(task: Task): Result<Task>
     suspend fun getTaskFromId(id: String): Result<Task>
     suspend fun updateStatus(task: Task, status: Int, userId: String): Result<Int>
+    suspend fun updateTaskOverdue(userId: String)
+
 }

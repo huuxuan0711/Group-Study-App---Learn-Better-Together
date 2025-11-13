@@ -212,6 +212,16 @@ class TaskViewModel @Inject constructor(
         }
     }
 
+    fun updateTaskOverdue(userId: String){
+        viewModelScope.launch {
+            try {
+                taskRepository.updateTaskOverdue(userId)
+            }catch (e: Exception){
+                _taskState.value = TaskUIState.Error(e.message.toString())
+            }
+        }
+    }
+
     fun createTask(input: TaskInput) {
         viewModelScope.launch {
             try {
