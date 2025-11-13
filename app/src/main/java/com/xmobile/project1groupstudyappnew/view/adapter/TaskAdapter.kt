@@ -20,25 +20,32 @@ class TaskAdapter(
 ) : ListAdapter<Task, TaskAdapter.TaskViewHolder>(DiffCallback()) {
 
     private var _status: Int = -1
+    private var originalList: List<Task> = emptyList()
 
-    class DiffCallback : DiffUtil.ItemCallback<Task>() {
-        override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean = oldItem == newItem
+    fun setTasks(tasks: List<Task>) {
+        originalList = tasks
+        submitList(tasks)
     }
 
+    // Lọc theo status
     fun listWithStatus(status: Int) {
         _status = status
         val filtered = if (status >= 0) {
             if (type == 1) {
-                if (status == 0) currentList.filter { it.status.containsValue(0) }
-                else currentList.filter { it.status[userId] == status }
+                if (status == 0) originalList.filter { it.status.containsValue(0) }
+                else originalList.filter { it.status[userId] == status }
             } else {
-                currentList.filter { it.status[userId] == status }
+                originalList.filter { it.status[userId] == status }
             }
         } else {
-            currentList
+            originalList
         }
-        submitList(filtered.toList())
+        submitList(filtered)
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<Task>() {
+        override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean = oldItem == newItem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -48,12 +55,7 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = getItem(position)
-
-        val id: String = if (type == 1) userId
-        else {
-            if (_status == -1) task.assignedTo
-            else userId
-        }
+        val id: String = if (type == 1) userId else if (_status == -1) task.assignedTo else userId
 
         holder.taskState.apply {
             when (task.status[id]) {

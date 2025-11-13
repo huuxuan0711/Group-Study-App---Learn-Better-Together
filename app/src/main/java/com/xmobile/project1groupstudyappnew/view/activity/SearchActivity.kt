@@ -322,8 +322,7 @@ class SearchActivity : BaseActivity() {
             binding.rvTasks.layoutManager = LinearLayoutManager(this)
             binding.rvTasks.adapter = taskAdapter
         }
-        // Chỉ submit danh sách mới
-        taskAdapter!!.submitList(tasks.toList())
+        taskAdapter!!.setTasks(tasks.toList())
     }
 
     private fun setUpRecyclerViewFiles(files: List<File>) {

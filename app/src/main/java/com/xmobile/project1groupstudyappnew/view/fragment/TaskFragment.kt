@@ -140,7 +140,7 @@ class TaskFragment : BaseFragment() {
                 binding.recyclerViewTask.adapter = taskAdapter
             }
         }
-        taskAdapter?.submitList(listTask.toList())
+        taskAdapter?.setTasks(listTask.toList())
     }
 
     private fun handleTaskClick(task: Task) {

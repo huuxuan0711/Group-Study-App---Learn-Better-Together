@@ -466,7 +466,7 @@ class TaskRepositoryImpl @Inject constructor(
 
     override suspend fun updateTaskOverdue(userId: String) {
         try {
-            val tasksRef = firebaseDatabase.getReference("Tasks")
+            val tasksRef = firebaseDatabase.getReference("tasks")
             val snapshot = tasksRef.get().await()
             val currentDate = LocalDate.now()
             val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
