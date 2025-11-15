@@ -36,6 +36,11 @@ class MainActivity : BaseActivity() {
 
     private fun initControl() {
         val userId = getSharedPreferences("user", MODE_PRIVATE).getString("userId", null)
+        if (userId == null) {
+            startActivity(Intent(this, StartActivity::class.java))
+            finish()
+            return
+        }
 
         //dọn file trong cache
         CacheManager.clearOldCache(this)
